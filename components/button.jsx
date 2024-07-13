@@ -1,20 +1,55 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { camelCase } from "change-case";
+import { Image } from "expo-image";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 
-export const Button = ({ onPress, disabled, children, style = {} }) => {
+const icons = {
+  google: require("../assets/icon/google.svg"),
+  facebook: require("../assets/icon/facebook.svg"),
+};
+
+export const Button = ({
+  onPress,
+  disabled,
+  children,
+  style = {},
+  variant = "filled",
+  leftIcon,
+  loading,
+}) => {
+  const buttonVariantStyle = styles[camelCase(`button-${variant}`)];
+  const textVariantStyle = styles[camelCase(`text-${variant}`)];
+
+  const loadingColor = variant === "filled" ? "#ffffff" : "#0ea5e9";
+
   return (
-    <Pressable
-      style={[styles.button, style, disabled && styles.buttonDisabled]}
+    <TouchableOpacity
+      style={[
+        styles.button,
+        buttonVariantStyle,
+        disabled && styles.buttonDisabled,
+        style,
+      ]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={styles.text}>{children}</Text>
-    </Pressable>
+      {leftIcon && !loading && (
+        <Image source={icons[leftIcon]} style={styles.leftIcon} />
+      )}
+      {loading && (
+        <ActivityIndicator style={styles.leftIcon} color={loadingColor} />
+      )}
+      <Text style={[styles.text, textVariantStyle]}>{children}</Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#0ea5e9",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -24,13 +59,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 16,
   },
+  buttonFilled: {
+    backgroundColor: "#0ea5e9",
+  },
+  buttonOutline: {
+    backgroundColor: "transparent",
+    borderColor: "#0ea5e9",
+    borderWidth: 1,
+  },
   buttonDisabled: {
     backgroundColor: "#94a3b8",
   },
   text: {
-    color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
+  },
+  textFilled: {
+    color: "#ffffff",
+  },
+  textOutline: {
+    color: "#0ea5e9",
+  },
+  leftIcon: {
+    marginRight: 8,
+    height: 20,
+    width: 20,
   },
 });

@@ -1,9 +1,16 @@
 import { Image } from "expo-image";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import { Link, Redirect } from "expo-router";
+import { useAuth } from "@clerk/clerk-expo";
 
 export default function Home() {
+  const { isSignedIn } = useAuth();
+
+  if (isSignedIn) {
+    return <Redirect href={"/(app)"} />;
+  }
+
   return (
     <View className="flex-1 items-center justify-center space-y-8 w-full px-5">
       <View className="space-y-5 justify-center items-center">
