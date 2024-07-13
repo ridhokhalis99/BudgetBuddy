@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { RecentTransactions } from "../../../screen-components/(app)/(tabs)/index/transactions";
 
 const HEADER_NAVIGATION = [
   {
@@ -62,18 +63,7 @@ export default function HomeScreen() {
         ))}
       </View>
 
-      <View style={styles.transactionsContainer}>
-        <View style={styles.transactionsHeader}>
-          <Text style={styles.transactionHeaderText}>Recent Transactions</Text>
-          <Image
-            source={require("../../../assets/icon/chevron-right.svg")}
-            style={styles.chevronIcon}
-          />
-        </View>
-        <View style={styles.transactionItemsContainer}>
-          <Text>tesss</Text>
-        </View>
-      </View>
+      <RecentTransactions />
     </View>
   );
 }
@@ -177,28 +167,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,
-  },
-  transactionsContainer: {
-    padding: 20,
-  },
-  transactionHeaderText: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginBottom: 10,
-  },
-  transactionsHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  chevronIcon: {
-    width: 8,
-    height: 12,
-  },
-  transactionItemsContainer: {
-    marginTop: 20,
-    borderRadius: 12,
-    backgroundColor: colors.white,
-    padding: 20,
   },
 });

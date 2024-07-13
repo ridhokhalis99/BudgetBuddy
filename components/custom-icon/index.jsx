@@ -4,6 +4,9 @@ import Home from "./home";
 import Report from "./report";
 import Statistic from "./statistic";
 import Qr from "./qr";
+import Food from "./food";
+import Bill from "./bill";
+import Investment from "./investment";
 
 const icons = {
   Account,
@@ -11,6 +14,9 @@ const icons = {
   Report,
   Statistic,
   Qr,
+  Food,
+  Bill,
+  Investment,
 };
 
 export default function CustomIcon({ name, size, color }) {
