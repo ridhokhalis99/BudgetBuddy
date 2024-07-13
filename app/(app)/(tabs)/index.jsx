@@ -1,23 +1,195 @@
-import { View, Text, Pressable } from "react-native";
 import React from "react";
-import { useAuth } from "@clerk/clerk-expo";
-import { Button } from "../../../components/button";
-import { Redirect, useRouter } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { Image } from "expo-image";
+
+const HEADER_NAVIGATION = [
+  {
+    text: "Send",
+    icon: require("../../../assets/icon/send.svg"),
+  },
+  {
+    text: "Request",
+    icon: require("../../../assets/icon/request.svg"),
+  },
+  {
+    text: "In & Out",
+    icon: require("../../../assets/icon/transfer.svg"),
+  },
+  {
+    text: "QR Code",
+    icon: require("../../../assets/icon/qr.svg"),
+  },
+];
 
 export default function HomeScreen() {
-  const { signOut, actor } = useAuth();
-  console.log("[] ~ HomeScreen ~ actor:", useAuth());
-  const router = useRouter();
-
-  const onSignOut = async () => {
-    await signOut();
-    router.replace("/(auth)/sign-in");
-  };
-
   return (
-    <View className="flex-1 justify-center items-center px-5 space-y-9 bg-white">
-      <Text>HomeScreen</Text>
-      <Button onPress={onSignOut}>Sign Out</Button>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          source={require("../../../assets/pattern/circular.svg")}
+          style={styles.pattern}
+        />
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceTitle}>Your Balance</Text>
+          <View style={styles.balanceRow}>
+            <Text style={styles.balanceAmount}>$24,321.900</Text>
+            <Image
+              source={require("../../../assets/icon/hide.svg")}
+              style={styles.hideIcon}
+            />
+          </View>
+        </View>
+        <View style={styles.bellContainer}>
+          <Image
+            source={require("../../../assets/icon/bell.svg")}
+            style={styles.bellIcon}
+          />
+          <View style={styles.notificationDot}>
+            <Text style={styles.notificationDotText}>2</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.actionRow}>
+        {HEADER_NAVIGATION.map((item) => (
+          <TouchableOpacity key={item.text} style={styles.actionButton}>
+            <View style={styles.actionIconContainer}>
+              <Image source={item.icon} style={styles.actionIcon} />
+            </View>
+            <Text style={styles.actionText}>{item.text}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <View style={styles.transactionsContainer}>
+        <View style={styles.transactionsHeader}>
+          <Text style={styles.transactionHeaderText}>Recent Transactions</Text>
+          <Image
+            source={require("../../../assets/icon/chevron-right.svg")}
+            style={styles.chevronIcon}
+          />
+        </View>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+  header: {
+    backgroundColor: colors.blue600,
+    padding: 20,
+    paddingTop: 80,
+    paddingBottom: 150,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "relative",
+  },
+  pattern: {
+    width: 320,
+    height: 320,
+    position: "absolute",
+    top: 0,
+    right: 0,
+  },
+  balanceContainer: {
+    flex: 1,
+  },
+  balanceTitle: {
+    color: "white",
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "500",
+  },
+  balanceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  balanceAmount: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  hideIcon: {
+    width: 20,
+    height: 20,
+  },
+  bellContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  bellIcon: {
+    width: 24,
+    height: 24,
+  },
+  notificationDot: {
+    backgroundColor: colors.red500,
+    borderRadius: 100,
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    top: -4,
+    right: -4,
+    padding: 2,
+  },
+  notificationDotText: {
+    color: colors.white,
+    width: 16,
+    textAlign: "center",
+  },
+  actionRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 20,
+    marginTop: -120,
+    paddingHorizontal: 10,
+  },
+  actionButton: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  actionIconContainer: {
+    backgroundColor: colors.blue500,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 60,
+    height: 60,
+  },
+  actionIcon: {
+    width: 26,
+    height: 26,
+  },
+  actionText: {
+    marginTop: 8,
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.white,
+  },
+  transactionsContainer: {
+    padding: 20,
+  },
+  transactionHeaderText: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 10,
+  },
+  transactionsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  chevronIcon: {
+    width: 8,
+    height: 12,
+  },
+});

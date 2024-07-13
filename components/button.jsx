@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import colors from "../constants/colors";
 
 const icons = {
   google: require("../assets/icon/google.svg"),
@@ -24,7 +25,7 @@ export const Button = ({
   const buttonVariantStyle = styles[camelCase(`button-${variant}`)];
   const textVariantStyle = styles[camelCase(`text-${variant}`)];
 
-  const loadingColor = variant === "filled" ? "#ffffff" : "#0ea5e9";
+  const loadingColor = variant === "filled" ? colors.white : colors.primary500;
 
   return (
     <TouchableOpacity
@@ -60,15 +61,15 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonFilled: {
-    backgroundColor: "#0ea5e9",
+    backgroundColor: colors.primary500,
   },
   buttonOutline: {
     backgroundColor: "transparent",
-    borderColor: "#0ea5e9",
+    borderColor: colors.primary500,
     borderWidth: 1,
   },
   buttonDisabled: {
-    backgroundColor: "#94a3b8",
+    backgroundColor: colors.slate400,
   },
   text: {
     fontSize: 16,
@@ -76,10 +77,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textFilled: {
-    color: "#ffffff",
+    color: colors.white,
   },
   textOutline: {
-    color: "#0ea5e9",
+    color: colors.primary500,
   },
   leftIcon: {
     marginRight: 8,
