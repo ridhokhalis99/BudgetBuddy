@@ -1,7 +1,7 @@
 import { View, Text, Pressable } from "react-native";
 import React from "react";
 import { useAuth } from "@clerk/clerk-expo";
-import { Button } from "../../components/button";
+import { Button } from "../../../components/button";
 import { Redirect, useRouter } from "expo-router";
 
 export default function HomeScreen() {
