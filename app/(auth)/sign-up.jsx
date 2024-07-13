@@ -1,90 +1,174 @@
-import * as React from "react";
-import { TextInput, Button, View } from "react-native";
-import { useSignUp } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import React, { useMemo, useCallback, useState } from "react";
+import { useSignUp, useOAuth } from "@clerk/clerk-expo";
+import { Link, useRouter } from "expo-router";
+import { Text, View } from "react-native";
+import { TextInput } from "../../components/text-input";
+import { Image } from "expo-image";
+import { useForm } from "react-hook-form";
+import { Button } from "../../components/button";
+import * as Linking from "expo-linking";
 
 export default function SignUp() {
-  const { isLoaded, signUp, setActive } = useSignUp();
+  const [loading, setLoading] = useState("");
+  const { signUp, setActive, isLoaded } = useSignUp();
+  const { startOAuthFlow: startOAuthFlowGoogle } = useOAuth({
+    strategy: "oauth_google",
+  });
+  const { startOAuthFlow: startOAuthFlowFacebook } = useOAuth({
+    strategy: "oauth_facebook",
+  });
+
   const router = useRouter();
+  const useFormObj = useForm();
+  const { handleSubmit, watch } = useFormObj;
 
-  const [emailAddress, setEmailAddress] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [pendingVerification, setPendingVerification] = React.useState(false);
-  const [code, setCode] = React.useState("");
+  const isButtonDisabled = useMemo(() => {
+    const { email, password, username } = watch();
+    return !email || !password || !username;
+  }, [watch()]);
 
-  const onSignUpPress = async () => {
-    if (!isLoaded) {
-      return;
-    }
+  const onSignUpPress = useCallback(
+    async (data) => {
+      const { email, password, username } = data;
+      if (!isLoaded) {
+        return;
+      }
+      try {
+        setLoading("sign_up");
+        const signUpAttempt = await signUp.create({
+          emailAddress: email,
+          password,
+          userName: username,
+        });
 
+        if (signUpAttempt.status === "complete") {
+          await setActive({ session: signUpAttempt.createdSessionId });
+          router.replace("/(app)");
+        } else {
+          console.error(JSON.stringify(signUpAttempt, null, 2));
+        }
+      } catch (err) {
+        console.error(JSON.stringify(err, null, 2));
+      }
+      setLoading("");
+    },
+    [isLoaded]
+  );
+
+  const onPressGoogle = useCallback(async () => {
     try {
-      await signUp.create({
-        emailAddress,
-        password,
-      });
+      setLoading("google");
+      const { createdSessionId, signIn, signUp, setActive } =
+        await startOAuthFlowGoogle({
+          redirectUrl: Linking.createURL("/dashboard", { scheme: "myapp" }),
+        });
 
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      setPendingVerification(true);
-    } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
-    }
-  };
-
-  const onPressVerify = async () => {
-    if (!isLoaded) {
-      return;
-    }
-
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.replace("/");
+      if (createdSessionId) {
+        setActive({ session: createdSessionId });
       } else {
-        console.error(JSON.stringify(completeSignUp, null, 2));
+        // Use signIn or signUp for next steps such as MFA
       }
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      console.error("OAuth error", err);
     }
-  };
+    setLoading("");
+  }, [startOAuthFlowGoogle]);
+
+  const onPressFacebook = useCallback(async () => {
+    try {
+      setLoading("facebook");
+      const { createdSessionId, signIn, signUp, setActive } =
+        await startOAuthFlowFacebook({
+          redirectUrl: Linking.createURL("/dashboard", { scheme: "myapp" }),
+        });
+
+      if (createdSessionId) {
+        setActive({ session: createdSessionId });
+      } else {
+        // Use signIn or signUp for next steps such as MFA
+      }
+    } catch (err) {
+      console.error("OAuth error", err);
+    }
+    setLoading("");
+  }, [startOAuthFlowFacebook]);
 
   return (
-    <View>
-      {!pendingVerification && (
-        <>
+    <View className="flex-1 justify-center items-center px-5 space-y-9 bg-white">
+      <Image
+        source={require("../../assets/logo.svg")}
+        className="w-[172px] h-[62px] mx-auto"
+      />
+      <View className="w-full space-y-7">
+        <View>
           <TextInput
-            autoCapitalize="none"
-            value={emailAddress}
-            placeholder="Email..."
-            onChangeText={(email) => setEmailAddress(email)}
+            useFormObj={useFormObj}
+            name="username"
+            label="Username"
+            placeholder="e.g., budgetbuddy123"
+            style={{ marginTop: 0 }}
           />
           <TextInput
-            value={password}
-            placeholder="Password..."
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
+            useFormObj={useFormObj}
+            name="email"
+            label="Email"
+            placeholder="e.g., budget@buddy.com"
+            style={{ marginTop: 0 }}
           />
-          <Button title="Sign Up" onPress={onSignUpPress} />
-        </>
-      )}
-      {pendingVerification && (
-        <>
           <TextInput
-            value={code}
-            placeholder="Code..."
-            onChangeText={(code) => setCode(code)}
+            useFormObj={useFormObj}
+            name="password"
+            label="Password"
+            placeholder="e.g., ********"
+            isPassword
           />
-          <Button title="Verify Email" onPress={onPressVerify} />
-        </>
-      )}
+        </View>
+        <Button
+          onPress={handleSubmit(onSignUpPress)}
+          disabled={isButtonDisabled}
+          loading={loading === "sign_up"}
+        >
+          Sign Up
+        </Button>
+        <View className="flex-row items-center">
+          <View className="flex-1 h-px bg-gray-300" />
+          <View>
+            <Text className="w-12 text-center text-gray-500">Or</Text>
+          </View>
+          <View className="flex-1 h-px bg-gray-300" />
+        </View>
+        <View>
+          <View>
+            <Button
+              onPress={onPressGoogle}
+              variant="outline"
+              color="sky-500"
+              leftIcon="google"
+              style={{ marginTop: 0 }}
+              loading={loading === "google"}
+            >
+              Sign up with Google
+            </Button>
+          </View>
+          <View>
+            <Button
+              onPress={onPressFacebook}
+              variant="outline"
+              color="facebook-500"
+              leftIcon="facebook"
+              loading={loading === "facebook"}
+            >
+              Sign up with Facebook
+            </Button>
+          </View>
+        </View>
+        <View className="flex-row space-x-1 mx-auto">
+          <Text className="text-gray-500">Already have an account?</Text>
+          <Link href="/sign-in">
+            <Text className="text-sky-600 font-medium">Sign in</Text>
+          </Link>
+        </View>
+      </View>
     </View>
   );
 }
