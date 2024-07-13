@@ -25,7 +25,7 @@ export const Button = ({
   const buttonVariantStyle = styles[camelCase(`button-${variant}`)];
   const textVariantStyle = styles[camelCase(`text-${variant}`)];
 
-  const loadingColor = variant === "filled" ? colors.white : colors.primary500;
+  const loadingColor = variant === "filled" ? colors.white : colors.blue500;
 
   return (
     <TouchableOpacity
@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonFilled: {
-    backgroundColor: colors.primary500,
+    backgroundColor: colors.blue500,
   },
   buttonOutline: {
     backgroundColor: "transparent",
-    borderColor: colors.primary500,
+    borderColor: colors.blue500,
     borderWidth: 1,
   },
   buttonDisabled: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   textOutline: {
-    color: colors.primary500,
+    color: colors.blue500,
   },
   leftIcon: {
     marginRight: 8,

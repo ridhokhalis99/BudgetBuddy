@@ -70,6 +70,9 @@ export default function HomeScreen() {
             style={styles.chevronIcon}
           />
         </View>
+        <View style={styles.transactionItemsContainer}>
+          <Text>tesss</Text>
+        </View>
       </View>
     </View>
   );
@@ -78,7 +81,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.gray50,
   },
   header: {
     backgroundColor: colors.blue600,
@@ -191,5 +194,11 @@ const styles = StyleSheet.create({
   chevronIcon: {
     width: 8,
     height: 12,
+  },
+  transactionItemsContainer: {
+    marginTop: 20,
+    borderRadius: 12,
+    backgroundColor: colors.white,
+    padding: 20,
   },
 });
