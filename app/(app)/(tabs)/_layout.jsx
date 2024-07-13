@@ -1,7 +1,7 @@
+import { StyleSheet, View } from "react-native";
 import { Tabs } from "expo-router";
 import colors from "../../../constants/colors";
 import CustomIcon from "../../../components/custom-icon";
-import { View } from "react-native";
 
 export default function TabLayout() {
   return (
@@ -10,25 +10,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.blue500,
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: {
-          marginRight: 20,
-          marginLeft: 20,
-          position: "absolute",
-          bottom: 24,
-          borderRadius: 100,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingBottom: 0,
-          borderTopWidth: 0,
-          shadowColor: "#44577B",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
-          elevation: 5,
-        },
+        tabBarStyle: styles.tabBar,
       }}
     >
       <Tabs.Screen
@@ -50,14 +32,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="qr"
         options={{
-          tabBarIcon: ({ color }) => (
-            <View
-              style={{
-                backgroundColor: colors.blue500,
-                padding: 18,
-                borderRadius: 100,
-              }}
-            >
+          tabBarIcon: () => (
+            <View style={styles.qrIcon}>
               <CustomIcon name="qr" size={28} color={colors.white} />
             </View>
           ),
@@ -82,3 +58,30 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    marginRight: 20,
+    marginLeft: 20,
+    position: "absolute",
+    bottom: 24,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 0,
+    borderTopWidth: 0,
+    shadowColor: "#44577B",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  qrIcon: {
+    backgroundColor: colors.blue500,
+    padding: 18,
+    borderRadius: 100,
+  },
+});

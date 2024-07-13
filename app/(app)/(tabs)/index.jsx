@@ -1,8 +1,14 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { Image } from "expo-image";
 import { RecentTransactions } from "../../../screen-components/(app)/(tabs)/index/transactions";
+import { CurrentMonthExpense } from "../../../screen-components/(app)/(tabs)/index/chart";
 
 const HEADER_NAVIGATION = [
   {
@@ -25,7 +31,7 @@ const HEADER_NAVIGATION = [
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
           source={require("../../../assets/pattern/circular.svg")}
@@ -62,9 +68,9 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ))}
       </View>
-
+      <CurrentMonthExpense />
       <RecentTransactions />
-    </View>
+    </ScrollView>
   );
 }
 
