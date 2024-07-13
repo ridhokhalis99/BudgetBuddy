@@ -3,9 +3,9 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 
-export default function HomeScreen() {
+export default function Home() {
   return (
-    <View className="space-y-8 w-full px-5">
+    <View className="flex-1 items-center justify-center space-y-8 w-full px-5">
       <View className="space-y-5 justify-center items-center">
         <Image
           source={require("../assets/illustration/saving-money.svg")}
@@ -21,7 +21,7 @@ export default function HomeScreen() {
           </Text>
         </View>
       </View>
-      <Link href="/sign-in" asChild>
+      <Link href="/(auth)/sign-in" asChild>
         <Pressable className="bg-sky-500 text-white py-3 px-5 rounded-xl w-full">
           <Text className="text-white text-base font-bold text-center">
             Get Started

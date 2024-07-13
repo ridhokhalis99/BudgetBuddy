@@ -7,7 +7,7 @@ const AuthContext = React.createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useStorageState("user", null);
 
-  if (!user) return <Redirect to="/sign-in" />;
+  if (!user) return <Redirect to="/(auth)/sign-in" />;
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
